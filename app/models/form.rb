@@ -131,11 +131,6 @@ class Form
     child_form
   end
   
-  def has_child?(child)
-    # TODO fix this hack.  This is not the best way to do this.
-    self.children.select{|s| s.id == child.id}.count > 0
-  end
-  
   def siblings
     return  ( self.parent_document.blank? ?
                 [] : (self.parent_document.children - [self]) )
@@ -306,12 +301,9 @@ protected
       
       # Update forms in dependent fields
       self.field_dependencies.each do |complete_key|
-        puts "wicked #{complete_key.inspect}"
         complete_key.symbolize_keys!
         field = Form.key_to_form_and_field(complete_key[:id])[1]
-        # puts "wicked2"
         next if field.dependent_forms.include?(self.form_key)
-        puts "Actually updating field"
         field.dependent_forms = field.dependent_forms.delete(@old_key)
         field.dependent_forms << self.form_key
         field.save
@@ -321,15 +313,11 @@ protected
       self.current.form_fields.each do |my_field|
         next if my_field.dependent_forms.blank?
         my_field.dependent_forms.each do |dep_form_key|
-          puts dep_form_key.inspect
           dependent_form = Form.key_to_form(dep_form_key)
           dependent_form.field_dependencies.each do |dep_hash|
             dep_hash.symbolize_keys!
-            puts "Hash: #{dep_hash[:id]}, oldkey: #{@old_key}, new_key: #{self.form_key}"
             next if not dep_hash[:id].include?(@old_key)
-            puts "Changing #{dependent_form.form_key} which has hash #{dep_hash[:id]}"
             dep_hash[:id] = "#{self.form_key}.#{my_field.field_key}"
-            puts "Changed #{dependent_form.form_key} to #{dep_hash[:id]}"
           end
           dependent_form.save
         end

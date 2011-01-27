@@ -1,0 +1,14 @@
+.section
+  .article
+    .header
+      %h1
+        = t("admin.form.create.header")
+    .content
+      %p.info
+        = t("admin.form.create.description")
+      - simple_form_for(@form, :url => create_form_admin_forms_path) do |form|
+        = render(:partial => "admin/forms/form", :locals => {:form => form})
+      %hr
+      %ul
+        %a{:href => admin_forms_path}
+          = t("back")

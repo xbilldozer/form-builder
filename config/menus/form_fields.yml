@@ -1,0 +1,17 @@
+form_fields:
+  fields:
+    path: "edit_admin_form_form_field_path(form,form_field)"
+    match: \/admin/forms/([\d\w]+)/form_fields/([\d\w]+)/edit.*$
+    position: 0
+  validations:
+    path: "validations_admin_form_form_field_path(form,form_field)"
+    match: \/admin/forms/([\d\w]+)/form_fields/([\d\w]+)/validations.*$
+    position: 1
+  options:
+    path: "options_admin_form_form_field_path(form,form_field)"
+    match: \/admin/forms/([\d\w]+)/form_fields/([\d\w]+)/options.*$
+    position: 2
+  dependencies:
+    path: "dependencies_admin_form_form_field_path(form,form_field)"
+    match: \/admin/forms/([\d\w]+)/form_fields/([\d\w]+)/dependencies.*$
+    position: 3

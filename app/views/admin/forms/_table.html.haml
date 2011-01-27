@@ -1,0 +1,23 @@
+%table.forms
+  %thead
+    %tr
+      %th.name= t("admin.form.table.name")
+      %th.fields= t("admin.form.table.fields")
+      %th.children= t("admin.form.table.children")
+      %th.c-version= t("admin.form.table.version.current")
+      %th.p-version= t("admin.form.table.version.published")
+      %th.act
+  %tbody
+    - @forms.each do |form|
+      %tr
+        %td.name= form.name
+        %td.fields= form.current.form_fields.size
+        %td.children= form.children.size
+        %td.c-version= form.current_version
+        %td.p-version= form.published_version
+        %td.act
+          %a.show{:href => admin_form_path(form)}
+            = icon_tag('show')
+          %a.edit{:href => edit_admin_form_path(form)} 
+            = icon_tag('edit')
+          = button_to('Delete', admin_form_path(form), :method => :delete, :class => "delete", :confirm => t("admin.form.confirm.delete", {:name => form.name}), :title => t('admin.post.destroy'))

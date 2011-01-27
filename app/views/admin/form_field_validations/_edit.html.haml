@@ -1,0 +1,10 @@
+=simple_form_for(FormFieldValidation.new, :url => create_validation_admin_form_form_field_path(form,form_field)) do |form|
+  .input.string.required
+    %label.string.required{:for => "field_vaidation"} 
+      %abbr{:title=>"required"} *
+      =t("admin.form_field.validations.type")
+    =select("field", "validation", option_groups_from_collection_for_select(make_group_from_single(FieldValidation.all - (validations || []), :group, form_field),:members, :name, :id, :name), :class => "string required")
+  =form.input :param, :hint => t("admin.form_field.validations.hints.param")
+  =form.input :message, :hint => t("admin.form_field.validations.hints.message")
+  %input{:type => "hidden", :name => "return_path", :value => @return_path}
+  =form.button :submit

@@ -1,0 +1,6 @@
+= form.input :name
+= form.input :number
+= form.input :description, :as => :text
+= form.input :vendor_id, :collection => Vendor.all.collect {|v| [ v.name, v.id ] }
+%input{:type => "hidden", :name => "return_path", :value => @return_path}
+= form.button :submit

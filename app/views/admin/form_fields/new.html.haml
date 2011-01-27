@@ -1,0 +1,18 @@
+.section
+  .article
+    .header
+      %h1
+        = t("admin.form_field.create.header", :form => @form.name.capitalize)
+    .content
+      %p.info
+        = t("admin.form_field.create.description")
+      =simple_form_for([:admin, @form, @form_field]) do |form|
+        =render(:partial => "admin/form_fields/form", :locals => {:form => form})
+      %hr
+      %ul
+        %li
+          %a{:href => admin_forms_path}
+            = t("admin.form.links.back_to_forms")
+        %li
+          %a{:href => hash_for(admin_forms_path, :sel => @form) } 
+            = t("admin.form.links.back_to_fields")

@@ -1,0 +1,17 @@
+%table.options
+  %thead
+    %tr
+      %th.label=t("admin.form_field.options.table.label")
+      %th.value=t("admin.form_field.options.table.value")
+      %th.act
+  %tbody
+    - options.each do |option|
+      %tr
+        %td.label=option.label
+        %td.value=option.value
+        %td.act
+          = button_to('Delete', destroy_option_admin_form_form_field_path(form, form_field, :option_id => option, :return_path => @return_path), :method => :delete, :class => "delete", :confirm => t("admin.form_field.options.confirm.delete", {:name => option.label}), :title => t('admin.form_field.options.destroy_link'))
+    - if options.empty?
+      %tr
+        %td{:colspan => 3, :style => "text-align: center;"}
+          %span.info=t("admin.form_field.options.table.no_options")

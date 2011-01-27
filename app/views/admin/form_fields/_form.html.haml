@@ -1,0 +1,18 @@
+= flash[:notice]
+= form.input :name, :hint => t("admin.form_field.form.hints.name")
+= form.input :label, :hint => t("admin.form_field.form.hints.label")
+= form.input :value, :hint => t("admin.form_field.form.hints.value"), :required => false
+= form.input :hint, :hint => t("admin.form_field.form.hints.hint"), :required => false
+= form.input :field_type, :as => :select, :collection => FieldType.all, :value_method => :_id, :label_method => :name
+- field_type = @form_field.field_type
+- if !field_type.blank?
+  - if !@form_field.new? && field_type.group.downcase == "option"
+    = form.input :has_other_option, :as => :boolean, :hint => t("admin.form_field.form.hints.other")
+  = hidden_field_tag "field_type_id", @form_field.field_type._id
+- if defined?(@return_path)
+  %input{:type => "hidden", :name => "return_path", :value => @return_path}
+- if defined?(@continue_path)
+  %input{:type => "hidden", :name => "continue_path", :value => @continue_path}
+  %input{:type => "submit", :name => "continue", :value => t("admin.form_field.links.save_and_continue", :action => form.object.new? ? "Create" : "Update") }
+= form.button :submit, :name => "single", :value => "Create"
+= form.button :submit, :name => "multiple", :value => "Create and Continue"

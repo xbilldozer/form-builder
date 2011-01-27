@@ -1,0 +1,28 @@
+- version = @form.current
+- form_fields = version.form_fields
+
+.section
+  .article
+    .header
+      %h1
+        %span= t("admin.form_field.index.header", :form => @form.name)
+        .search
+          %form{:method => search_admin_forms_path, 'data-path' => admin_form_form_fields_path}
+            %input.default{:type => :search, :value => "search"}
+    .content
+      %p.info
+        = t("admin.form_field.index.description")
+        %br
+        = @form.description
+        %br
+        = "Current Version: #{@form.current_version} | "
+        = "Published Version: #{@form.published_version} | "
+      = render(:partial => "admin/form_fields/table", :locals => {:form => @form, :version => version, :form_fields => form_fields})
+      %hr
+        %ul
+          %li
+            %a{:href => admin_form_path(@form)}
+              = t("back")
+          %li
+            %a{:href => new_admin_form_form_field_path}
+              = t("admin.form_field.index.create")

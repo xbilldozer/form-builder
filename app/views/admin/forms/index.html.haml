@@ -1,0 +1,35 @@
+.section.products.form_view
+  #tree_container
+    .header
+      %h1= t("admin.form.index.tree.header")
+    .content
+      #tree_view
+        = render_list_of_all_forms
+      %div{:style => "margin: 15px 0 10px"}
+  #workspace_container
+    .loading{:style => "display: none;"}
+      %img{:src => "/images/throbber.gif", :height => 16, :width => 16} 
+        Loading Form...
+        = t("admin.form.index.workshop.loading")
+    #workspace
+      %div{:style => "padding:15px 30px;"} 
+        %h1 
+          = t("admin.form.index.workshop.header")
+        %p
+          = t("admin.form.index.workshop.description")
+          %a{:href => new_form_admin_forms_path}
+            create a new form
+        - sections = t("admin.form.index.workshop.sections") || {}
+        - sections.each do |name, info|
+          %h2
+            / =info[:header]
+          %p
+            / =info[:description]
+
+
+- content_for :extra_javascript do  
+  :javascript
+    var $url = "/admin/forms/";
+  = javascript_include_tag :jstree
+  = javascript_include_tag "jquery.hashchange.js"
+  = javascript_include_tag "product_builder.js"

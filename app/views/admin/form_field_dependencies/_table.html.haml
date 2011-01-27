@@ -1,0 +1,22 @@
+%table.dependencies
+  %thead
+    %tr
+      %th.key=    t("admin.form_field.dependencies.table.key")
+      %th.form=   t("admin.form_field.dependencies.table.form")
+      %th.field=  t("admin.form_field.dependencies.table.field")
+      %th.value=  t("admin.form_field.dependencies.table.value")
+      %th.act
+  %tbody
+    - dependencies.each do |dep|
+      %tr
+        %td.key=   dep[:id]
+        %td.form=  dep[:form].name
+        %td.field= dep[:field].name
+        %td.value= dep['value']
+        %td.act            
+          = button_to('Delete', destroy_dependency_admin_form_form_field_path(form, form_field, :dep_form_id => dep[:form].id, :return_path => @return_path), :method => :delete, :class => "delete", :confirm => t("admin.form_field.dependencies.confirm.delete", {:name => form_field.name}), :title => t('admin.form_field.dependencies.destroy_link'))
+          
+    - if dependencies.blank?
+      %tr
+        %td{:colspan => 3, :style => "text-align: center;"}
+          %span.info= t("admin.form_field.dependencies.table.no_dependencies")

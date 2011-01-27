@@ -1,0 +1,14 @@
+.header
+  %h1 
+    = t("admin.forms.fields.header", :name => @form.name)
+
+%div{:style => "padding:15px 5px;"}
+  %div{:style => "margin: 0 0 0 35px"}
+    - simple_form_for([:admin, @form]) do |form|
+      = render(:partial => "admin/forms/form", :locals => {:form => form})
+  %div{:style=>"margin: 15px 0"}
+    %ul.actions.horizontal{:style => "margin-left: 0; padding-left: 0;"}
+      %li
+        %a.new{:href => new_admin_form_form_field_path(@form)}
+          =t("admin.form.links.create_field")
+  =render(:partial => "/admin/form_fields/table", :locals => {:form => @form, :version => @version, :fields => @form_fields})

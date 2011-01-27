@@ -1,0 +1,146 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  form:
+    field:
+      hints:
+        other: ""
+      labels:
+        other: "Other"
+  menu:
+    admin:
+      forms: "Forms"
+  admin:
+    form:
+      header: "Form Builder"
+      
+      links:
+        back_to_forms: "Back to Forms"
+        back_to_fields: "Back to Fields"
+        create_form: "New Form"
+        edit_form: "Edit Form"
+        create_field: "New Field"
+      confirmation:
+        delete: "Are you sure you want to destroy %{name}? This will remove all child forms as well."
+      
+      index:
+        header: "Form Builder"
+        description: "Welcome to the form editor main page."
+        tree:
+          header: "Forms"
+        workshop:
+          header: "Form Editor"
+          description: "Select a form from the list to the left to begin working on it. Or "
+          sections:
+            add:
+              header: "Adding a sub-product"
+              description: "Right-click on the product you wish to add the sub-product beneath, and select 'create' from the menu that appears. A text box will appear for you to enter a name in.  Type in the desired name and hit 'Enter'.  In a few moments you will be able to click on the link and the product form edit screen will appear."
+            delete:
+              header: "Deleting a sub-product"
+              description: "Right-click on the product you wish to add the sub-product beneath, and select 'delete' from the menu that appears."
+            move:
+              header: "Rearranging (ordering) sub-products"
+              description: "You may click and drag sub-products to move them.  You may move them from product to product, or move them around within the same product to arrange the order in which forms will appear for the product."
+      create: 
+        header: "Create New Form"  
+        description: ""
+      
+      table:
+        name: "Name"
+        fields: "Fields"
+        children: "Child Forms"
+        version:
+          current: "Current Version"
+          published: "Published Version"
+      show:
+
+    form_field:
+      menu:
+        fields: "Form Field"
+        validations: "Validations"
+        options: "Options"
+        dependencies: "Dependencies"
+      links:
+        save_and_continue: "%{action} and Continue"
+        create: "New Form Field"
+      confirm:
+        delete: "Are you sure you want to delete field %{name}?"
+      index:
+        header: "Form Fields for %{form}"
+        description: ""
+      form:
+        hints:
+          name: "Name used on the backend to represent this field"
+          label: "Label to be displayed beside the field"
+          value: "Default value for the field.  Can be blank."
+          other: "Add a text field for 'other'"
+          hint: "Helper text to be displayed next to the field (like this)"
+      edit:
+        header: "Edit Form Fields: %{name}"
+        description: ""
+      dependencies:
+        destroy_link: "Destroy Dependency"
+        button:
+          add: "Create Dependency"
+        header: "Field Dependencies: %{name}"
+        description: "Edit the dependencies here that will activate and deactivate forms in the user's workflow"
+        empty: "There are no forms available to depend on this field.  Try adding another form to the root form."
+        form_name: "Dependent Form"
+        confirm:
+          delete: "Are you sure you wish to remove this dependency?"
+        labels:
+          form: "Form"
+          value: "Value"
+          not_available: "You cannot have dependencies with this field type"
+        hints:
+          form: "The form that will appear when this dependency is met"
+          value: "The value that must be inputted to meet the dependency"
+        table:
+          key: "Form Key"
+          form: "Dependent Form"
+          field: "This Field Name"
+          value: "Required Value"
+          no_dependencies: "There are no dependencies for this field"
+        create:
+          error: "There was an error creating your dependency"
+          success: "Your dependency has been successfuly created"
+        destroy:
+          error: "There was an error destroying your dependency"
+          success: "Your dependency has been successfuly destroyed"
+      validations:
+        destroy_link: "Destroy Validation"
+        header: "Field Validations: %{name}"
+        description: "Edit the validations that will be performed on this field when the form is complete"
+        type: "Validation Type"
+        validations_title: "Validations:"
+        hints:
+          param: "Parameters for the validations that require them"
+          message: "Message to display to the user when an item doesn't pass this validation"
+        table:
+          name: "Name"
+          message: "Message"
+          no_validations: "No Validations"
+        confirm:
+          delete: "Are you sure you wish to remove this validation?"
+      options:
+        destroy_link: "Destroy Option"
+        header: "Field Options: %{name}"
+        description: "Edit the options here that will be seen by the user for this field"
+        not_optionable: "You cannot add options to this field type"
+        hints:
+          label: "Text that the user will see"
+          value: "Value stored internally"
+        table:
+          no_options: "No Options"
+          label: "Label"
+          value: "Value"
+        confirm:
+          delete: "Are you sure you wish to remove this option?"
+      table:
+        name: "Field Name"
+        label: "Field Label"
+        default: "Field Default"
+        options: "Field Options"
+        type: "Field Type"
+        

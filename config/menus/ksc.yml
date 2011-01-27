@@ -1,0 +1,5 @@
+ksc:
+  forms:
+    path: /admin/forms
+    match: \/admin/forms.*$
+    position: 0

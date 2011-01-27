@@ -1,0 +1,30 @@
+.section.products.form_view
+  #tree_container
+    .header
+      %h1= t("admin.form.index.tree.header")
+    .content
+      #tree_view
+        =render(:partial => "/admin/form_fields/menu", :locals => {:form => @form, :form_field => @form_field})
+      %div{:style => "margin: 15px 0 10px"}
+  #workspace_container
+    #workspace
+      %div{:style => "padding:15px 30px;"} 
+        %h1
+          = t("admin.form_field.edit.field.header", :name => @form.name)
+        %p.info
+          =t("admin.form_field.edit.field.description")
+        =simple_form_for([:admin, @form, @form_field]) do |form|
+          =render(:partial => "admin/form_fields/form", :locals => {:form => form})
+
+<<<<<<< HEAD
+- content_for :extra_javascript do
+  :javascript
+    $(document).ready(function(){
+      $("#form_field_field_type").val($("#field_type_id").val());
+    });
+=======
+:javascript
+  $(document).ready(function(){
+    $("#form_field_field_type").val($("#field_type_id").val());
+  });
+>>>>>>> Forms brought into alignment in admin and product. #1019, #1350 closed.

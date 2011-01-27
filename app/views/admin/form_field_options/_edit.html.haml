@@ -1,0 +1,5 @@
+=simple_form_for(FormFieldOption.new, :url => create_option_admin_form_form_field_path(form, form_field)) do |f|
+  =f.input :label, :hint => t("admin.form_field.options.hints.label")
+  =f.input :value, :hint => t("admin.form_field.options.hints.value")
+  %input{:type => "hidden", :name => "return_path", :value => @return_path}
+  =f.button :submit

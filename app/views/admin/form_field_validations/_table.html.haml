@@ -1,0 +1,18 @@
+%table.validations
+  %thead
+    %tr
+      %th.name= t("admin.form_field.validations.table.name")
+      %th.message= t("admin.form_field.validations.table.message")
+      %th.act
+  %tbody
+    - validations.each do |validation|
+      %tr
+        %td.name=validation.name
+        %td.message=validation.message
+        %td.act
+          = button_to('Delete', destroy_validation_admin_form_form_field_path(form, form_field, :validation_id => validation, :return_path => @return_path), :method => :delete, :class => "delete", :confirm => t("admin.form_field.validations.confirm.delete", {:name => validation.name}), :title => t('admin.form_field.validations.destroy_link'))
+    - if validations.empty?
+      %tr
+        %td{:colspan => 3, :style => "text-align: center;"}
+          %span.info
+            = t("admin.form_field.validations.table.no_validations")

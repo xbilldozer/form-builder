@@ -1,0 +1,20 @@
+- if menu = MenuItem.all(:form_fields)
+  .form_fields_menu
+    %ul.actions
+      - menu.each_with_index do |item, index|
+        - if index == menu.length - 1
+          %li{item.selected?(request.path) ? {:class => [:selected, item.name] } : {:class => item.name} }
+            %a{:href => Kernel.eval(item.path, binding)}
+              = t("admin.form_field.menu.#{item.name}")
+        - else
+          %li{item.selected?(request.path) ? {:class => [:selected] } : {} }
+            %a{:href => Kernel.eval(item.path, binding)}
+              = t("admin.form_field.menu.#{item.name}")
+%hr
+%ul.actions
+  %li
+    %a.back{:href => admin_forms_path}
+      = t("admin.form.links.back_to_forms")
+  %li
+    %a.back{:href => hash_for(admin_forms_path, :sel => form)} 
+      = t("admin.form.links.back_to_fields")

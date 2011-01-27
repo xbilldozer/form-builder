@@ -1,0 +1,10 @@
+FormController#show
+	Add a way to show data from each version of the form. An ajaxy tab or paged effort might be nice.
+	
+
+Date fields
+	add class to the display of each date text box
+	add js to find all of those date boxes and turn them into jquery pickers
+
+File fields
+	The forms need to know if one of these fields exist so they can be multipart or normal!

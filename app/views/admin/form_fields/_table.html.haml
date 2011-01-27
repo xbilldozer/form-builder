@@ -1,0 +1,21 @@
+%table.form_fields
+  %thead
+    %tr
+      %th.name= t("admin.form_field.table.name")
+      %th.label= t("admin.form_field.table.label")
+      %th.default= t("admin.form_field.table.default")
+      %th.options= t("admin.form_field.table.options")
+      %th.type= t("admin.form_field.table.type")
+      %th.act
+  %tbody
+    - fields.each do |field|
+      %tr
+        %td.name= field.name
+        %td.label= field.label
+        %td.default= field.value
+        %td.options= field.options.collect!{|opt| opt.label}.join(", ")
+        %td.type= field.field_type.name
+        %td.act
+          %a.edit{:href => edit_admin_form_form_field_path(form, field)} 
+            = icon_tag('edit')
+          = button_to('Delete', admin_form_form_field_path(form, field), :method => :delete, :class => "delete", :confirm => t("admin.form_field.confirm.delete", {:name => field.name}), :title => t('admin.post.destroy')) 

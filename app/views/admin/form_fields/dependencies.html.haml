@@ -1,0 +1,21 @@
+.section.products.form_view
+  #tree_container
+    .header
+      %h1= t("admin.form.index.tree.header")
+    .content
+    #tree_view
+      =render(:partial => "/admin/form_fields/menu", :locals => {:form => @form, :form_field => @form_field})
+    %div{:style => "margin: 15px 0 10px"}
+  #workspace_container
+    #workspace
+      %div{:style => "padding:15px 30px;"}
+        %h1
+          = t("admin.form_field.dependencies.header", :name => @form.name)
+        %p.info
+          =t("admin.form_field.dependencies.description")
+          =render(:partial => "/admin/form_field_dependencies/edit", :locals => {:form => @form, :form_field => @form_field, :dependencies => @dependencies})
+          =render(:partial => "/admin/form_field_dependencies/table", :locals => {:form => @form, :form_field => @form_field, :dependencies => @dependencies})
+
+
+/=content_for :extra_javascript do
+/  =javascript_include_tag "form_builder.js"

@@ -15,3 +15,7 @@ form_fields:
     path: "dependencies_admin_form_form_field_path(form,form_field)"
     match: \/admin/forms/([\d\w]+)/form_fields/([\d\w]+)/dependencies.*$
     position: 3
+  field_dependencies:
+    path: "field_dependencies_admin_form_form_field_path(form,form_field)"
+    match: \/admin/forms/([\d\w]+)/form_fields/([\d\w]+)/field_dependencies.*$
+    position: 4

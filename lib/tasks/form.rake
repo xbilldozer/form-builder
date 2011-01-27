@@ -20,7 +20,7 @@ FIELD_VALIDATIONS = [
   {:group => "Image", :name => "Image Dimensions",:function => "dimensions",    :param => true},
   
   {:group => "Custom",:name => "Min # Images",    :function => "min_num_img",   :param => true},
-  {:group => "Custom",:name => "Max # Images",    :function => "max_num_img",   :param => true}
+  {:group => "Custom",:name => "Max # Images",    :function => "max_num_img",   :param => true},
   
   {:group => "All",   :name => "sum_calc",        :function => "sum_calc",      :param => false},
   {:group => "All",   :name => "exist_calc",      :function => "exist_calc",    :param => false},

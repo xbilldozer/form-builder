@@ -1,8 +1,8 @@
 = flash[:notice]
 = form.input :name, :hint => t("admin.form_field.form.hints.name")
-= form.input :label, :hint => t("admin.form_field.form.hints.label")
 = form.input :value, :hint => t("admin.form_field.form.hints.value"), :required => false
 = form.input :hint, :hint => t("admin.form_field.form.hints.hint"), :required => false
+= form.input :price, :hint => t("admin.form_field.form.hints.price"), :required => false
 = form.input :field_type, :as => :select, :collection => FieldType.all, :value_method => :_id, :label_method => :name
 - field_type = @form_field.field_type
 - if !field_type.blank?

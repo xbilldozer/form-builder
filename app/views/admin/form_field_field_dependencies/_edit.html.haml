@@ -1,0 +1,21 @@
+%form{:action => create_field_dependency_admin_form_form_field_path(form, form_field), :method => :post, :class => "simple_form form_field"}
+  %input{:type => "hidden", :name => "authenticity_token", :value => form_authenticity_token}
+  %input{:type => "hidden", :name => "return_path", :value => @return_path}
+  %input{:type => "hidden", :name => "form_field_id", :value => form_field.id}  
+  - dependable_fields = form_field.siblings - form_field.dependent_field_objects
+  - if dependable_fields.empty?
+    = t("admin.form_field.field_dependencies.empty")
+  - else
+    .input.select.required
+      %label.select.required{:for => "field_dependency_field_id"}
+        %abbr{:title => "required"} *
+        = t("admin.form_field.field_dependencies.field_name")
+      %select.select.required#field_dependency_form_id{:name => "field_dependency[field_id]"}
+        - dependable_fields.each do |f_dep|
+          %option{:value => f_dep.id}= f_dep.name
+      %span.hint
+        =t("admin.form_field.field_dependencies.hints.field")
+  
+    = render_field_value_selector(form_field)
+    
+    %input{:type => "submit", :value => t("admin.form_field.field_dependencies.button.add")}

@@ -108,6 +108,33 @@ en:
         destroy:
           error: "There was an error destroying your dependency"
           success: "Your dependency has been successfuly destroyed"
+      field_dependencies:
+        destroy_link: "Destroy Field Dependency"
+        button:
+          add: "Create Field Dependency"
+        header: "Field Dependencies: %{name}"
+        description: "Edit the fields that will depend on this field's value.  The value that you select here is the value that must be entered ON THIS FIELD to enable THE SELECTED FIELD."
+        empty: "There are no fields available to depend on this field.  Try adding another field to the current form."
+        field_name: "Dependent Field"
+        confirm:
+          delete: "Are you sure you wish to remove this dependency?"
+        labels:
+          field: "Field"
+          value: "Value"
+          not_available: "You cannot have dependencies with this field type"
+        hints:
+          field: "The field that will appear when this dependency is met"
+          value: "The value that must be inputted to meet the dependency"
+        table:
+          key: "Dependent Field Name"
+          value: "Required Value"
+          no_dependencies: "There are no fields depending on this field"
+        create:
+          error: "There was an error creating your field dependency"
+          success: "Your field dependency has been successfuly created"
+        destroy:
+          error: "There was an error destroying your field dependency"
+          success: "Your field dependency has been successfuly destroyed"
       validations:
         destroy_link: "Destroy Validation"
         header: "Field Validations: %{name}"
@@ -119,6 +146,7 @@ en:
           message: "Message to display to the user when an item doesn't pass this validation"
         table:
           name: "Name"
+          param: "Param"
           message: "Message"
           no_validations: "No Validations"
         confirm:

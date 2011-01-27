@@ -25,12 +25,15 @@ class FormField
   key :value,             String
   key :hint,              String
   key :size,              Integer
+  key :price,             Float
+  key :subtotal,          Float
   key :position,          Integer, :default => 0
   key :has_other_option,  Boolean, :default => false
   key :field_key,         String
   key :dependent_forms,   Array
   key :created_at,        Time
   key :updated_at,        Time
+  
 
 
   # Associations

@@ -4,6 +4,7 @@ class FormFieldOption
   # Schema
   key :value,  String
   key :label,  String
+  key :price,  Float
   
   # Associations
   belongs_to :form_field

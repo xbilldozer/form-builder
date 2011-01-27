@@ -39,6 +39,10 @@ class Admin::FormFieldsController < ApplicationController
     respond_with([:admin, @form_field])
   end
   
+  def field_dependencies
+    respond_with([:admin, @form_field])
+  end
+  
   def create
     form_field      = params[:form_field]
     field_type_id   = form_field.delete(:field_type)
@@ -184,7 +188,35 @@ class Admin::FormFieldsController < ApplicationController
     redirect_to(params[:return_path])
   end
 
+  def create_field_dependency
+    @form_field = @version.form_fields.find(params[:id])
+    dependency = params[:field_dependency]
+    dependent_field = @version.form_fields.find(dependency[:field_id])
+    ret = dependent_field.dependency(:create, @form_field, dependency[:value])
+    
+    if ret
+      flash[:notice] = t("admin.form_field.dependencies.create.success")
+    else
+      flash[:notice] = t("admin.form_field.dependencies.create.error")
+    end
+    
+    redirect_to(params[:return_path])
+  end
+  
+  def destroy_field_dependency
+    @form_field = @version.form_fields.find(params[:id])
+    dependent_field = @version.form_fields.find(params[:dep_field_id])
+    
+    ret = dependent_field.dependency(:destroy, @form_field)
 
+    if ret
+      flash[:notice] = t("admin.form_field.dependencies.create.success")
+    else
+      flash[:notice] = t("admin.form_field.dependencies.create.error")
+    end
+    
+    redirect_to(params[:return_path])
+  end
 
 
 
@@ -203,6 +235,7 @@ class Admin::FormFieldsController < ApplicationController
     @options = @form_field.options
     @validations = @form_field.validations
     @dependencies = @form_field.collect_dependencies
+    @field_dependencies = @form_field.collect_field_dependencies
   end
 end
   

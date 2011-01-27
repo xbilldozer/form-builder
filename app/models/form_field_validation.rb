@@ -22,6 +22,13 @@
 # :group => "Image", :name => "File Format",     :function => "format_of"
 # :group => "Image", :name => "Image Dimensions",:function => "dimensions"
 #
+# :group => "Custom",:name => "Min # Images",    :function => "min_num_img"
+# :group => "Custom",:name => "Max # Images",    :function => "max_num_img"
+# 
+# :group => "All",   :name => "sum_calc",        :function => "sum_calc"
+# :group => "All",   :name => "exist_calc",      :function => "exist_calc"
+# :group => "All",   :name => "quantity_calc",   :function => "quantity_calc"
+# :group => "All",   :name => "eval_calc",       :function => "eval_calc"
 ################################################################################
 
 class FormFieldValidation
@@ -232,9 +239,126 @@ class FormFieldValidation
     )
   end
   
-  def field_math(value)
+  ##############################################################################
+  # File and Image
+  ##############################################################################
+  
+  def field_min_num_img(value)
+    Rails.logger.debug("VALIDATION: MIN NUM IMG")
+    new_val = value.reject{|r| r.empty? }
+    pass    = new_val.count >= self.param.to_i
     
+    return(
+      pass ? 
+        nil :
+        select_message("must have at least #{self.param} images selected")
+    )
   end
+  
+  def field_max_num_img(value)
+    Rails.logger.debug("VALIDATION: MAX NUM IMG")
+    new_val = value.reject{|r| r.empty? }
+    pass    = new_val.count <= self.param.to_i
+    
+    return(
+      pass ? 
+        nil :
+        select_message("must have at most #{self.param} images selected")
+    )
+  end
+  
+  ##############################################################################
+  # Field Calculation
+  ##############################################################################
+  
+  # We need to iterate through the array of values and save the sum
+  # of the selected options' #price to #subtotal
+  def sum_calc(value)
+    # Grab the options for this field
+    options = form_field.options
+    
+    # Take the value and get rid of blank items
+    value = value.delete("")
+    subtotal = 0
+    
+    # Iterate over the values to get the selected option names
+    # then add their price to the total
+    value.each do |option_value|
+      selected_option = options.select{|o| o.value == option_value}.first
+      subtotal += selected_option.price
+    end
+    
+    # Store the subtotal in the field
+    form_field.update_attributes!(:subtotal => subtotal)
+    
+    return nil
+  end
+  
+  # If the field has a value, then copy its #price into #subtotal
+  def exist_calc(value)
+    # Don't do anything if there is no value
+    return nil if value.blank?
+    
+    # Copy price to subtotal
+    form_field.update_attributes!(:subtotal => form_field.price)
+    
+    return nil
+  end
+  
+  # Multiply the selected item's #price by the quantity indicated
+  # and store in #subtotal
+  def quantity_calc(value)
+    
+    form_field.update_attributes!( :subtotal => (form_field.price * value.to_i) )
+    
+    return nil
+  end
+  
+  # Interpolate fields into the param and store the eval into #subtotal
+  def eval_calc(value)
+    match   = /(\\\\)?\%\{([^\}]+)\}/
+    
+    result  = value.gsub(match) do
+      escaped, pattern, key = $1, $2, $2.to_sym
+      
+      Rails.logger.debug("[Validations] We've got #{escaped} #{pattern} #{key}")
+      ret = pattern
+      if !escaped
+        Rails.logger.debug("[Validations] Working well... #{pattern}")
+        field_data = nil
+        
+        # Grab the data stored in the field, store 0 if there's an error
+        begin
+          field_data = form_field._parent_document.form_data.send(pattern.to_sym) || 0
+        rescue
+          Rails.logger.info("The field specified (#{pattern}) does not exist in this scope (#{form_field._parent_document.name})")
+          # If the field doesn't have a value, then we'll store a 0 because we don't want
+          # to be throwing errors.  This is a normal use-case
+          field_data = 0
+        end
+        
+        Rails.logger.debug("[Validations] Data found for #{pattern}: #{field_data}")
+        
+        ret = field_data
+      end
+      
+      ret
+    end
+    
+    # We want to clean up the input so nothing malicious gets done in eval
+    strip_symbols = /[^\*\^\/\+\-\%\d\s\(\)\[\]]/
+    result_to_eval = result.gsub(strip_symbols,"")
+    
+    # Evaluate this puppy
+    subtotal = Kernel.eval(result_to_eval)
+    
+    # Store the result
+    form_field.update_attributes!(:subtotal => subtotal)
+    
+    return nil
+  end
+  
+  
   
 private  
   

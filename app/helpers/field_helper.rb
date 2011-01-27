@@ -15,11 +15,14 @@ module FieldHelper
     field_group           = field_type.group.dup
     field_tags            = field_type.tag.dup
     
-    # Set up a var to catch field options
+    # Set up a var to catch field options and html input options
     field_options         = {}
+    input_options         = {}
     
     # Add interpolations for values that aren't customized
-    [:label, :hint, :value].each do |tag|
+    interpolation_values = [:label, :hint]
+    interpolation_values << :value if form_helper.object.send(field.name).blank?
+    interpolation_values.each do |tag|
       if !(field_tags.key?(tag) || field.send(tag).blank?)
         field_tags[tag]   = "%{#{tag.to_s}}"
       end
@@ -27,10 +30,12 @@ module FieldHelper
     
     # Grab the tag :as if it's there      
     field_options[:as]        = field_tags.delete(:as) if field_tags[:as]
+    # Grab default classes from tags if the tag exists
+    field_options[:class]     = field_tags.delete(:class) if field_tags[:class]
     # Set the user object as an option so we can use it later
     field_options[:user]      = current_user if current_user
-    # If there aren't any validations on the fields, don't make it required
-    field_options[:required]  = false if field.validations.count == 0  
+    # If there aren't any "require" validations on the fields, don't make it required
+    field_options[:required]  = false unless field.validations.select{|fv| fv.function == "required"}.count > 0
     
     # Interpolate and merge the changes into the field options
     field_tags            = interpolate_options(field, field_tags).symbolize_keys
@@ -39,10 +44,34 @@ module FieldHelper
     # Set up an array to hold any rendering we need to do before the final
     # field gets built
     built_field           = []
+    post_field            = []
     
     # Determine what kind of evaluation needs to happen 
     # depending on the field tag type
     case field_group.downcase
+    when "number"
+      Rails.logger.debug("I'm a number field!!")
+      # Need to find a max and min or set some defaults
+      # First, check to see if we have any validations for the field.
+      field_validations = field.validations
+      
+      field_validations.each do |validation|
+        next if not ["number_min","number_max"].include?(validation.function)
+        case validation.function
+        when "number_min"
+          Rails.logger.debug("Number min: #{validation.param}")
+          input_options[:min] = validation.param.to_s
+        when "number_max"
+          Rails.logger.debug("Number max: #{validation.param}")
+          input_options[:max] = validation.param.to_s
+        end
+      end
+      
+      # Second, set defaults if need be
+      input_options[:min] ||= NUMBER_FIELD_MIN
+      input_options[:max] ||= NUMBER_FIELD_MAX
+      input_options[:step]  = "1"
+      input_options[:value] = "0"      
     when "option"
 
       # Set the collection
@@ -53,13 +82,15 @@ module FieldHelper
         temp_form, disabled = create_other_field(field, form_helper)
         built_field << temp_form
         # Set the select box to "Other" if the textbox isn't disabled
-        field_options[:selected] = FormField::OTHER_FIELD_NAME if !disabled
+        input_options[:selected] = FormField::OTHER_FIELD_NAME if !disabled
       end
     when "custom"
       # Are we a Photo Library or a Preview?
       case field_type.name
       when "Photo Library"
         field_options[:collection] = photos
+        temp_form = create_add_photo_button(field, form_helper)
+        post_field << temp_form
       when "Preview"
         
       end
@@ -68,8 +99,30 @@ module FieldHelper
       # Anything additional need to happen?
     end
     
+    # Add html options to the field options
+    field_options[:input_html] = input_options
+
     # Render simple form!
-    built_field.unshift(form_helper.input(field.name.to_sym, field_options))
+    built_field.unshift(form_helper.input(field.name.to_sym, field_options))  
+    
+    # If there's more, then add it on
+    built_field << post_field if not post_field.blank?
+    
+    # Check if we need to wrap this field up
+    if field.fields_depended_on.size > 0
+      wrapper = capture_haml do
+        wrapper_classes = ["dependent-field"]
+        wrapper_classes << ["dependencies-met"] if field.dependencies_met?
+        haml_tag :div, {:class => wrapper_classes, 
+                        :"data-fields" => field.fields_depended_on.to_json, 
+                        :id => "wrapper_#{field.name}"} do
+          haml_concat(built_field.to_s.html_safe)
+        end
+      end
+      
+      built_field = wrapper
+    end
+    
     return built_field.to_s.html_safe
   end
 
@@ -86,8 +139,10 @@ module FieldHelper
   # Returns TWO variables: STRING temp_form and BOOLEAN disabled
   def create_other_field(field, form_helper) 
     current_value = form_helper.object.send(field.name.to_sym)
-    disabled      = (current_value == FormField::OTHER_FIELD_NAME) || 
-                    !(field.collect_option_names.include?(current_value))
+    Rails.logger.debug("FOUND THE VALUE: #{current_value}")
+    # disabled      = (current_value == FormField::OTHER_FIELD_NAME) || 
+    #                 !(field.collect_option_names.include?(current_value))
+    disabled      =   (field.collect_option_names.include?(current_value))
 
     temp          = form_helper.input( 
                       field.name.to_sym,
@@ -97,12 +152,30 @@ module FieldHelper
                       :required => false,
                       :input_html => {
                         :class => [:other_field],
-                        :value => ""
+                        :value => disabled ? "" : current_value
                       },
                       :disabled => disabled
                     )
     
     return [temp, disabled]
+  end
+  
+  # Simple routine to create a button for "Add Photos" for the
+  # Photo Library field type.
+  def create_add_photo_button(field, form_helper)
+    if defined?(NEW_PHOTO_LIBRARY_URL)
+      return capture_haml do
+        haml_tag :div, {:class => [:row]} do
+          haml_tag :div, {:class => [:"photo-button-wrapper", :grid_12, :column]} do
+            haml_tag :a, t("photo_library.add_photos"), {
+                          :class => [:button, :center], 
+                          :href => NEW_PHOTO_LIBRARY_URL }
+          end
+        end
+      end
+    else
+      return ""
+    end
   end
   
   #
